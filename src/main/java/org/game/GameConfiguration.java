@@ -16,6 +16,8 @@ public class GameConfiguration {
     private int windowWidth;
     @Value("${window.height}")
     private int windowHeight;
+    @Value("${window.fullscreen}")
+    private boolean fullscreen;
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
@@ -24,6 +26,6 @@ public class GameConfiguration {
 
     @Bean
     public WindowConfig windowConfig() {
-        return new WindowConfig(windowWidth, windowHeight);
+        return new WindowConfig(windowWidth, windowHeight, fullscreen);
     }
 }

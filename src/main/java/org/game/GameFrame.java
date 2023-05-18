@@ -14,6 +14,10 @@ public class GameFrame extends Frame {
 
     public GameFrame(WindowConfig config) {
         setSize(config.width(), config.height());
+        if (config.fullscreen()) {
+            setExtendedState(Frame.MAXIMIZED_BOTH);
+            setUndecorated(true);
+        }
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
