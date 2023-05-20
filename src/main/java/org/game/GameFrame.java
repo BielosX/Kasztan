@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Optional;
 
 
 @Service
@@ -38,8 +37,7 @@ public class GameFrame extends Frame {
 
     @Override
     public void paint(Graphics graphics) {
-        Optional<KeyEvent> event = keyboardEventPump.getEvent();
-        event.ifPresent(e -> {
+        keyboardEventPump.getEvents().forEach(e -> {
             if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_A) {
                 rectX -= 20;
             }

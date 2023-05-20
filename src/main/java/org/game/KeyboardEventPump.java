@@ -4,16 +4,18 @@ import org.springframework.stereotype.Service;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 @Service
 public class KeyboardEventPump implements KeyListener {
 
-    private final ConcurrentLinkedQueue<KeyEvent> events;
+    private static final int INIT_SIZE = 16;
+
+    private Queue<KeyEvent> events;
 
     public KeyboardEventPump() {
-        this.events = new ConcurrentLinkedQueue<>();
+        this.events = new ArrayDeque<>(INIT_SIZE);
     }
 
     @Override
@@ -29,7 +31,9 @@ public class KeyboardEventPump implements KeyListener {
         events.add(e);
     }
 
-    public Optional<KeyEvent> getEvent() {
-        return Optional.ofNullable(events.poll());
+    public Queue<KeyEvent> getEvents() {
+        Queue<KeyEvent> waitingEvents = events;
+        events = new ArrayDeque<>(INIT_SIZE);
+        return waitingEvents;
     }
 }
