@@ -2,10 +2,12 @@ package org.game;
 
 import org.springframework.stereotype.Service;
 
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -32,6 +34,7 @@ public class GameFrame extends Frame {
                 System.exit(0);
             }
         });
+        addComponentListener(new ResizeListener());
         addKeyListener(keyboardEventPump);
         this.keyboardEventPump = keyboardEventPump;
         rectX = 200;
@@ -47,14 +50,6 @@ public class GameFrame extends Frame {
                 secondBuffer.setRGB(x, y, color);
             }
         }
-    }
-
-    @Override
-    public void update(Graphics graphics) {
-        Graphics2D graphics2D = (Graphics2D)graphics;
-        Rectangle bounds = graphics2D.getClipBounds();
-        secondBuffer = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_RGB);
-        repaint();
     }
 
     @Override
@@ -80,5 +75,21 @@ public class GameFrame extends Frame {
         Graphics2D graphics2d = (Graphics2D) graphics;
         graphics2d.drawImage(secondBuffer, null, 0, 0);
         repaint();
+    }
+
+    private class ResizeListener implements ComponentListener {
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+            Component component = e.getComponent();
+            secondBuffer = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
+        }
+
+        @Override
+        public void componentMoved(ComponentEvent e) {}
+        @Override
+        public void componentShown(ComponentEvent e) {}
+        @Override
+        public void componentHidden(ComponentEvent e) {}
     }
 }
