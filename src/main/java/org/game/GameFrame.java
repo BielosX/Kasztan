@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 
 @Service
 public class GameFrame extends Frame {
+    private static final int BUFFER_TYPE = BufferedImage.TYPE_INT_RGB;
 
     private final KeyboardEventPump keyboardEventPump;
     private int rectX;
@@ -39,7 +40,7 @@ public class GameFrame extends Frame {
         this.keyboardEventPump = keyboardEventPump;
         rectX = 200;
         rectY = 200;
-        secondBuffer = new BufferedImage(config.width(), config.height(), BufferedImage.TYPE_INT_RGB);
+        secondBuffer = new BufferedImage(config.width(), config.height(), BUFFER_TYPE);
     }
 
     private void secondBufferClearColor(int color) {
@@ -82,7 +83,7 @@ public class GameFrame extends Frame {
         @Override
         public void componentResized(ComponentEvent e) {
             Component component = e.getComponent();
-            secondBuffer = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
+            secondBuffer = new BufferedImage(component.getWidth(), component.getHeight(), BUFFER_TYPE);
         }
 
         @Override
