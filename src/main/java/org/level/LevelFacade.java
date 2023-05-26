@@ -1,6 +1,7 @@
 package org.level;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.math3.linear.RealVector;
 import org.springframework.stereotype.Service;
 
 import java.awt.Graphics2D;
@@ -14,5 +15,14 @@ public class LevelFacade implements Drawable {
     @Override
     public void draw(Graphics2D graphics2D) {
         player.draw(graphics2D);
+    }
+
+    public void tick(float deltaSeconds) {
+        player.move(deltaSeconds);
+        player.jump(deltaSeconds);
+    }
+
+    public void setPlayerVelocity(RealVector velocity) {
+        player.setVelocity(velocity);
     }
 }
