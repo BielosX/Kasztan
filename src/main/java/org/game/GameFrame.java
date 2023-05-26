@@ -8,22 +8,22 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.time.Duration;
+import java.time.Instant;
 
 
 @Service
 public class GameFrame extends Frame {
     private static final int BUFFER_TYPE = BufferedImage.TYPE_INT_RGB;
 
-    private final KeyboardEventPump keyboardEventPump;
-    private int rectX;
-    private int rectY;
+    private final GameFacade facade;
     private BufferedImage secondBuffer;
+    private long time = 0;
 
-    public GameFrame(WindowConfig config, KeyboardEventPump keyboardEventPump) {
+    public GameFrame(WindowConfig config, KeyboardEventAdapter keyboardEventAdapter, GameFacade facade) {
         setSize(config.width(), config.height());
         if (config.fullscreen()) {
             setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -36,10 +36,8 @@ public class GameFrame extends Frame {
             }
         });
         addComponentListener(new ResizeListener());
-        addKeyListener(keyboardEventPump);
-        this.keyboardEventPump = keyboardEventPump;
-        rectX = 200;
-        rectY = 200;
+        addKeyListener(keyboardEventAdapter);
+        this.facade = facade;
         secondBuffer = new BufferedImage(config.width(), config.height(), BUFFER_TYPE);
     }
 
@@ -55,26 +53,18 @@ public class GameFrame extends Frame {
 
     @Override
     public void paint(Graphics graphics) {
-        keyboardEventPump.getEvents().forEach(e -> {
-            if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_A) {
-                rectX -= 20;
-            }
-            if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_D) {
-                rectX += 20;
-            }
-            if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_S) {
-                rectY += 20;
-            }
-            if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_W) {
-                rectY -= 20;
-            }
-        });
+        if (time > 30) {
+            time = 0;
+            facade.tick(0.3f);
+        }
+        Instant beforeRendering = Instant.now();
         secondBufferClearColor(0);
         Graphics2D bufferGraphics = secondBuffer.createGraphics();
         bufferGraphics.drawString("Hello", 100, 100);
-        bufferGraphics.drawRect(rectX, rectY, 30, 30);
+        bufferGraphics.drawRect(Math.round(facade.rectX), Math.round(facade.rectY), 30, 30);
         Graphics2D graphics2d = (Graphics2D) graphics;
         graphics2d.drawImage(secondBuffer, null, 0, 0);
+        time += Duration.between(beforeRendering, Instant.now()).toMillis();
         repaint();
     }
 
