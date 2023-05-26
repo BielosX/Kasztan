@@ -28,8 +28,8 @@ dependencies {
     implementation 'org.springframework:spring-core:6.0.9'
     implementation 'org.springframework:spring-beans:6.0.9'
     implementation 'org.springframework:spring-context:6.0.9'
-
-
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 test {

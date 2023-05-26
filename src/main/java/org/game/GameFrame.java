@@ -53,18 +53,17 @@ public class GameFrame extends Frame {
 
     @Override
     public void paint(Graphics graphics) {
-        if (time > 30) {
-            time = 0;
-            facade.tick(0.3f);
+        if (time > 10000000) {
+            time = time % 10000000;
+            facade.tick(0.1f);
         }
         Instant beforeRendering = Instant.now();
         secondBufferClearColor(0);
         Graphics2D bufferGraphics = secondBuffer.createGraphics();
-        bufferGraphics.drawString("Hello", 100, 100);
-        bufferGraphics.drawRect(Math.round(facade.rectX), Math.round(facade.rectY), 30, 30);
+        facade.drawLevel(bufferGraphics);
         Graphics2D graphics2d = (Graphics2D) graphics;
         graphics2d.drawImage(secondBuffer, null, 0, 0);
-        time += Duration.between(beforeRendering, Instant.now()).toMillis();
+        time += Duration.between(beforeRendering, Instant.now()).getNano();
         repaint();
     }
 
