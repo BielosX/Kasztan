@@ -14,6 +14,10 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Configuration
 @ComponentScan("org.level")
@@ -40,8 +44,19 @@ public class LevelConfiguration {
     }
 
     @Bean
+    public List<Obstacle> obstacles(LevelSpecification specification) {
+        return specification.obstacles()
+                .stream().map(o -> new Obstacle(o.x(), o.y(), o.width(), o.height()))
+                .collect(toList());
+    }
+
+    @Bean
     public Player player(LevelSpecification specification) {
         RealVector velocity = new ArrayRealVector(2, 0.0);
-        return new Player(specification.player().x(), specification.player().y(), velocity);
+        return new Player(specification.player().x(),
+                specification.player().y(),
+                30,
+                30,
+                velocity);
     }
 }
