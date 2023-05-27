@@ -3,7 +3,10 @@ package org.level;
 import com.google.gson.Gson;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
@@ -36,6 +40,11 @@ public class LevelConfiguration {
     }
 
     @Bean
+    public LevelBeanPostProcessor levelBeanPostProcessor() {
+        return new LevelBeanPostProcessor();
+    }
+
+    @Bean
     public LevelSpecification levelSpecification() throws IOException {
         ClassPathResource resource = new ClassPathResource(levelFile);
         Reader reader = new InputStreamReader(resource.getInputStream());
@@ -43,9 +52,17 @@ public class LevelConfiguration {
     }
 
     @Bean
-    public List<Obstacle> obstacles(LevelSpecification specification) {
+    public List<Obstacle> obstacles(LevelSpecification specification, ConfigurableListableBeanFactory factory) {
         return specification.obstacles()
-                .stream().map(o -> new Obstacle(o.x(), o.y(), o.width(), o.height()))
+                .stream().map(o -> {
+                    Obstacle obstacle = new Obstacle(o.x(), o.y(), o.width(), o.height());
+                    UUID id = UUID.randomUUID();
+                    String beanName = "obstacle" + id;
+                    factory.initializeBean(obstacle, beanName);
+                    factory.autowireBean(obstacle);
+                    factory.registerSingleton(beanName, obstacle);
+                    return obstacle;
+                })
                 .collect(toList());
     }
 
