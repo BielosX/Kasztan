@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -51,12 +50,13 @@ public class LevelConfiguration {
     }
 
     @Bean
-    public Player player(LevelSpecification specification) {
+    public Player player(LevelSpecification specification, List<Obstacle> obstacles) {
         RealVector velocity = new ArrayRealVector(2, 0.0);
         return new Player(specification.player().x(),
                 specification.player().y(),
                 30,
                 30,
-                velocity);
+                velocity,
+                obstacles);
     }
 }

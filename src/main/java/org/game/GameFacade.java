@@ -24,7 +24,6 @@ public class GameFacade {
 
     private static final String CUSTOM_PROPERTIES_NAME = "CUSTOM_PROPERTIES";
     private static final String LEVEL_FILE_PROPERTY_NAME = "levelFile";
-    private static final RealVector ZERO_VELOCITY = new ArrayRealVector(2, 0.0);
     private final GameKeyEventVisitor visitor = new GameKeyEventVisitor();
     private final AnnotationConfigApplicationContext levelContext;
     private final LevelFacade levelFacade;
@@ -78,10 +77,14 @@ public class GameFacade {
         @Override
         public void visit(KeyReleased key) {
             if (key.keyCode() == KeyEvent.VK_D || key.keyCode() == KeyEvent.VK_A) {
-                levelFacade.setPlayerVelocity(ZERO_VELOCITY);
+                RealVector vector = new ArrayRealVector(2, 0.0);
+                vector.setEntry(1, levelFacade.getPlayerVelocity().getEntry(1));
+                levelFacade.setPlayerVelocity(vector);
             }
             if (key.keyCode() == KeyEvent.VK_W || key.keyCode() == KeyEvent.VK_S) {
-                levelFacade.setPlayerVelocity(ZERO_VELOCITY);
+                RealVector vector = new ArrayRealVector(2, 0.0);
+                vector.setEntry(0, levelFacade.getPlayerVelocity().getEntry(0));
+                levelFacade.setPlayerVelocity(vector);
             }
         }
     }
