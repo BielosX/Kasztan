@@ -25,6 +25,10 @@ public class LevelConfiguration {
     private String levelFile;
     @Value("${game.gravity}")
     private float gravity;
+    @Value("${player.width}")
+    private int playerWidth;
+    @Value("${player.height}")
+    private int playerHeight;
 
     private final Gson gson = new Gson();
 
@@ -55,8 +59,8 @@ public class LevelConfiguration {
         RealVector velocity = new ArrayRealVector(2, 0.0);
         return new Player(specification.player().x(),
                 specification.player().y(),
-                30,
-                30,
+                playerWidth,
+                playerHeight,
                 velocity,
                 obstacles);
     }
