@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.stream.IntStream;
 
-public class ObstaclesBeanFactoryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {
+public class ObstaclesBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {
     private final static String LEVEL_FILE_PROPERTY = "levelFile";
     private Environment environment;
     private final Gson gson = new Gson();
