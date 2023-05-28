@@ -50,18 +50,8 @@ public class LevelConfiguration {
     }
 
     @Bean
-    public List<Obstacle> obstacles(LevelSpecification specification, ConfigurableListableBeanFactory factory) {
-        return specification.obstacles()
-                .stream().map(o -> {
-                    Obstacle obstacle = new Obstacle(o.x(), o.y(), o.width(), o.height());
-                    UUID id = UUID.randomUUID();
-                    String beanName = "obstacle" + id;
-                    factory.initializeBean(obstacle, beanName);
-                    factory.autowireBean(obstacle);
-                    factory.registerSingleton(beanName, obstacle);
-                    return obstacle;
-                })
-                .collect(toList());
+    public static ObstaclesBeanFactoryPostProcessor obstaclesBeanFactoryPostProcessor() {
+        return new ObstaclesBeanFactoryPostProcessor();
     }
 
     @Bean
